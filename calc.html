@@ -1,0 +1,108 @@
+<html>
+
+<head>
+    <title>Js - Calculator</title>
+    <style>
+        * {
+            text-align: center;
+            background: #193549;
+            color: black;
+            font-family: 'helvetica neue', sans-serif;
+            font-weight: 80;
+            font-size: 60px;
+        }
+
+
+        .container {
+            width: 400em;
+            height: auto;
+            border: 2em grey;
+            display: flex;
+        }
+
+        .container-col {
+            flex-direction: column;
+        }
+
+        .button-col {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .operator-col {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input {
+            background-color: black;
+            color: greenyellow;
+            margin: 2px;
+            text-align: right;
+        }
+
+        .button-row {
+            display: flex;
+            text-align: center;
+            align-content: center;
+            justify-content: space-evenly;
+            margin: 1px;
+        }
+
+        .button {
+            padding: 3px;
+            margin: 2px;
+            flex-grow: 1;
+            background-color: beige;
+        }
+
+        .button-eval {
+            background-color: chocolate;
+        }
+
+        .button-op {
+            min-width: 3em;
+            background-color: blueviolet;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="container-col">
+            <input class="input" accept="text" name="input">
+            <div class="button-col">
+                <div class="button-row">
+                    <button class="button">7</button>
+                    <button class="button">8</button>
+                    <button class="button">9</button>
+                </div>
+                <div class="button-row">
+                    <button class="button">4</button>
+                    <button class="button">5</button>
+                    <button class="button">6</button>
+                </div>
+                <div class="button-row">
+                    <button class="button">1</button>
+                    <button class="button">2</button>
+                    <button class="button">3</button>
+                </div>
+                <div class="button-row">
+                    <button class="button">0</button>
+                    <button class="button">.</button>
+                    <button class="button button-eval">=</button>
+                </div>
+                <div class="button-row"></div>
+            </div>
+        </div>
+        <div class="operator-col">
+            <button class="button button-op">/</button>
+            <button class="button button-op">*</button>
+            <button class="button button-op">-</button>
+            <button class="button button-op">+</button>
+        </div>
+    </div>
+</body>
+
+</html>
