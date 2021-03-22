@@ -7,9 +7,9 @@
             text-align: center;
             background: #193549;
             color: black;
-            font-family: 'helvetica neue', sans-serif;
+            font-family: 'lucida console', 'courier new', sans-serif;
             font-weight: 80;
-            font-size: 60px;
+            font-size: 50px;
         }
 
 
@@ -22,6 +22,8 @@
 
         .container-col {
             flex-direction: column;
+            border: 1px solid lightgray;
+            padding: 2px;
         }
 
         .button-col {
@@ -30,6 +32,8 @@
         }
 
         .operator-col {
+            border: 1px solid lightgray;
+            padding: 2px;
             display: flex;
             flex-direction: column;
         }
@@ -39,6 +43,11 @@
             color: greenyellow;
             margin: 2px;
             text-align: right;
+            
+        }
+
+        .input:focus {
+            outline: none;
         }
 
         .button-row {
@@ -50,19 +59,32 @@
         }
 
         .button {
+            min-width: 3em;
             padding: 3px;
             margin: 2px;
             flex-grow: 1;
             background-color: beige;
         }
 
+        .button:active {
+            background-color: gray;
+            transform: translateY(2px);
+        }
+
+        .button:focus {
+            outline: none;
+        }
+
         .button-eval {
-            background-color: chocolate;
+            background-color: darkorange;
         }
 
         .button-op {
-            min-width: 3em;
-            background-color: blueviolet;
+            background-color:mediumorchid;
+        }
+
+        .button-clear {
+            background-color: darkorange;
         }
     </style>
 </head>
@@ -71,32 +93,33 @@
 
     <div class="container">
         <div class="container-col">
-            <input class="input" accept="text" name="input">
+            <input class="input" accept="text" name="input" readonly>
             <div class="button-col">
                 <div class="button-row">
-                    <button class="button">7</button>
-                    <button class="button">8</button>
-                    <button class="button">9</button>
+                    <button class="button button-write">7</button>
+                    <button class="button button-write">8</button>
+                    <button class="button button-write">9</button>
                 </div>
                 <div class="button-row">
-                    <button class="button">4</button>
-                    <button class="button">5</button>
-                    <button class="button">6</button>
+                    <button class="button button-write">4</button>
+                    <button class="button button-write">5</button>
+                    <button class="button button-write">6</button>
                 </div>
                 <div class="button-row">
-                    <button class="button">1</button>
-                    <button class="button">2</button>
-                    <button class="button">3</button>
+                    <button class="button button-write">1</button>
+                    <button class="button button-write">2</button>
+                    <button class="button button-write">3</button>
                 </div>
                 <div class="button-row">
-                    <button class="button">0</button>
-                    <button class="button">.</button>
+                    <button class="button button-write">0</button>
+                    <button class="button button-write">.</button>
                     <button class="button button-eval">=</button>
                 </div>
                 <div class="button-row"></div>
             </div>
         </div>
         <div class="operator-col">
+            <button class="button button-clear">cl</button>
             <button class="button button-op">/</button>
             <button class="button button-op">*</button>
             <button class="button button-op">-</button>
@@ -105,4 +128,79 @@
     </div>
 </body>
 
+<script>
+
+    const writeButtons = Array.from(document.querySelectorAll('.button-write'));
+    const opButtons = Array.from(document.querySelectorAll('.button-op'));
+    const evalButton = document.querySelector('.button-eval');
+    const clearButton = document.querySelector('.button-clear');
+    const input = document.querySelector('input[name="input"]');
+
+
+    let firstNumber;
+    let secondNumber;
+    let currentNumber = "";
+    let operator;
+    let secondValFlag = false;
+    let clearFlag = false;
+    let result = 0;
+
+    writeButtons.forEach(button => button.addEventListener('click', () => {    
+        const prevVal = currentNumber;
+        displayValue(prevVal + button.innerHTML)
+        currentNumber = input.value;
+        }));
+
+    opButtons.forEach(button => button.addEventListener('click', () =>{
+        operator = button.innerHTML;
+        firstNumber = currentNumber;
+        currentNumber = "";
+    
+    }));
+    
+    clearButton.addEventListener('click', () => clear());
+    evalButton.addEventListener('click', () => operate(firstNumber, currentNumber, operator));
+
+    function clear() {
+        firstNumber = "";
+        secondNumber = "";
+        currentNumber = "";
+        displayValue("");
+    
+    }
+
+    function operate(firstNumString, secondNumString, operator){
+        
+        const firstNum = parseInt(firstNumString);
+        const secondNum = parseInt(secondNumString);
+        
+        switch (operator) {
+            case "+":
+                displayValue(firstNum + secondNum);
+                break;
+            case "-":
+                displayValue(firstNum - secondNum);
+                break;
+            case "*":
+                displayValue(firstNum * secondNum);
+                break;
+            case "/":
+                if (parseInt(secondNum) === 0) displayValue("err Zero Division");
+                else displayValue(firstNum / secondNum);
+                break;
+            default:
+                displayValue("err");
+        }
+    }
+
+    function displayValue(value){
+        input.value = value;
+    }
+
+    
+
+   
+    console.log(opButtons);
+
+</script>
 </html>
