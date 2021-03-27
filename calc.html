@@ -1,5 +1,5 @@
+<!DOCTYPE html>
 <html>
-
 <head>
     <title>Js - Calculator</title>
     <style>
@@ -11,45 +11,36 @@
             font-weight: 80;
             font-size: 50px;
         }
-
-
         .container {
             width: 400em;
             height: auto;
             border: 2em grey;
             display: flex;
         }
-
         .container-col {
             flex-direction: column;
             border: 1px solid lightgray;
             padding: 2px;
         }
-
         .button-col {
             display: flex;
             flex-direction: column;
         }
-
         .operator-col {
             border: 1px solid lightgray;
             padding: 2px;
             display: flex;
             flex-direction: column;
         }
-
         .input {
             background-color: black;
             color: greenyellow;
             margin: 2px;
             text-align: right;
-            
         }
-
         .input:focus {
             outline: none;
         }
-
         .button-row {
             display: flex;
             text-align: center;
@@ -57,7 +48,6 @@
             justify-content: space-evenly;
             margin: 1px;
         }
-
         .button {
             min-width: 3em;
             padding: 3px;
@@ -65,24 +55,19 @@
             flex-grow: 1;
             background-color: beige;
         }
-
         .button:active {
             background-color: gray;
             transform: translateY(2px);
         }
-
         .button:focus {
             outline: none;
         }
-
         .button-eval {
             background-color: darkorange;
         }
-
         .button-op {
-            background-color:mediumorchid;
+            background-color: mediumorchid;
         }
-
         .button-clear {
             background-color: darkorange;
         }
@@ -129,78 +114,80 @@
 </body>
 
 <script>
-
     const writeButtons = Array.from(document.querySelectorAll('.button-write'));
     const opButtons = Array.from(document.querySelectorAll('.button-op'));
     const evalButton = document.querySelector('.button-eval');
     const clearButton = document.querySelector('.button-clear');
     const input = document.querySelector('input[name="input"]');
 
-
     let firstNumber;
-    let secondNumber;
     let currentNumber = "";
     let operator;
-    let secondValFlag = false;
-    let clearFlag = false;
+    let continueFlag = false;
     let result = 0;
 
-    writeButtons.forEach(button => button.addEventListener('click', () => {    
+    writeButtons.forEach(button => button.addEventListener('click', () => {
         const prevVal = currentNumber;
         displayValue(prevVal + button.innerHTML)
         currentNumber = input.value;
-        }));
+    }));
 
-    opButtons.forEach(button => button.addEventListener('click', () =>{
+    opButtons.forEach(button => button.addEventListener('click', () => {
+        if (continueFlag) {
+            operate(firstNumber, currentNumber, operator);
+            currentNumber = result;
+        }
+
         operator = button.innerHTML;
         firstNumber = currentNumber;
         currentNumber = "";
-    
+        continueFlag = true;
     }));
-    
+
     clearButton.addEventListener('click', () => clear());
-    evalButton.addEventListener('click', () => operate(firstNumber, currentNumber, operator));
+
+    evalButton.addEventListener('click', () => {
+        operate(firstNumber, currentNumber, operator);
+        continueFlag = false;
+    });
 
     function clear() {
         firstNumber = "";
-        secondNumber = "";
         currentNumber = "";
+        continueFlag = false;
+        result = 0;
         displayValue("");
-    
     }
 
-    function operate(firstNumString, secondNumString, operator){
-        
+    function operate(firstNumString, secondNumString, operator) {
+
         const firstNum = parseInt(firstNumString);
         const secondNum = parseInt(secondNumString);
-        
+
         switch (operator) {
             case "+":
-                displayValue(firstNum + secondNum);
+                result = firstNum + secondNum;
                 break;
             case "-":
-                displayValue(firstNum - secondNum);
+                result = firstNum - secondNum;
                 break;
             case "*":
-                displayValue(firstNum * secondNum);
+                result = firstNum * secondNum;
                 break;
             case "/":
                 if (parseInt(secondNum) === 0) displayValue("err Zero Division");
-                else displayValue(firstNum / secondNum);
+                else result = firstNum / secondNum;
                 break;
             default:
                 displayValue("err");
         }
+        displayValue(result);
     }
 
-    function displayValue(value){
+    function displayValue(value) {
         input.value = value;
     }
 
-    
-
-   
-    console.log(opButtons);
-
 </script>
+
 </html>
