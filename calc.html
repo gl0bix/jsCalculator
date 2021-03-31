@@ -97,7 +97,7 @@
                 </div>
                 <div class="button-row">
                     <button class="button button-write">0</button>
-                    <button class="button button-write">.</button>
+                    <button class="button button-write" disabled>.</button>
                     <button class="button button-eval">=</button>
                 </div>
                 <div class="button-row"></div>
@@ -124,31 +124,36 @@
     let currentNumber = "";
     let operator;
     let continueFlag = false;
-    let result = 0;
+    let opFlag = false;
 
     writeButtons.forEach(button => button.addEventListener('click', () => {
+        if (opFlag){
+            currentNumber = "";
+            continueFlag = true;
+        }
         const prevVal = currentNumber;
         displayValue(prevVal + button.innerHTML)
         currentNumber = input.value;
+        opFlag = false;
     }));
 
     opButtons.forEach(button => button.addEventListener('click', () => {
-        if (continueFlag) {
-            operate(firstNumber, currentNumber, operator);
-            currentNumber = result;
-        }
-
+        if (continueFlag) 
+            currentNumber = operate(firstNumber, currentNumber, operator);
         operator = button.innerHTML;
         firstNumber = currentNumber;
-        currentNumber = "";
-        continueFlag = true;
+        displayValue(currentNumber);
+        opFlag = true;
     }));
 
     clearButton.addEventListener('click', () => clear());
 
     evalButton.addEventListener('click', () => {
-        operate(firstNumber, currentNumber, operator);
+        const result = operate(firstNumber, currentNumber, operator);
+        displayValue(result);
+        currentNumber = result;
         continueFlag = false;
+        opFlag = false;
     });
 
     function clear() {
@@ -163,6 +168,7 @@
 
         const firstNum = parseInt(firstNumString);
         const secondNum = parseInt(secondNumString);
+        let result = 0;
 
         switch (operator) {
             case "+":
@@ -175,19 +181,20 @@
                 result = firstNum * secondNum;
                 break;
             case "/":
-                if (parseInt(secondNum) === 0) displayValue("err Zero Division");
+                if (parseInt(secondNum) === 0) return "err Zero Division";
                 else result = firstNum / secondNum;
                 break;
             default:
-                displayValue("err");
+                return "err";
         }
-        displayValue(result);
+        return result;
     }
 
     function displayValue(value) {
         input.value = value;
     }
 
+//TODO: add options for floats
 </script>
 
 </html>
