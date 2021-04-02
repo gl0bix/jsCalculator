@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html>
+<meta charset="UTF-8">
+
 <head>
     <title>Js - Calculator</title>
     <style>
@@ -11,36 +13,43 @@
             font-weight: 80;
             font-size: 50px;
         }
+
         .container {
             width: 400em;
             height: auto;
             border: 2em grey;
             display: flex;
         }
+
         .container-col {
             flex-direction: column;
             border: 1px solid lightgray;
             padding: 2px;
         }
+
         .button-col {
             display: flex;
             flex-direction: column;
         }
+
         .operator-col {
             border: 1px solid lightgray;
             padding: 2px;
             display: flex;
             flex-direction: column;
         }
+
         .input {
             background-color: black;
             color: greenyellow;
             margin: 2px;
             text-align: right;
         }
+
         .input:focus {
             outline: none;
         }
+
         .button-row {
             display: flex;
             text-align: center;
@@ -48,6 +57,7 @@
             justify-content: space-evenly;
             margin: 1px;
         }
+
         .button {
             min-width: 3em;
             padding: 3px;
@@ -55,19 +65,24 @@
             flex-grow: 1;
             background-color: beige;
         }
+
         .button:active {
             background-color: gray;
             transform: translateY(2px);
         }
+
         .button:focus {
             outline: none;
         }
+
         .button-eval {
             background-color: darkorange;
         }
+
         .button-op {
             background-color: mediumorchid;
         }
+
         .button-clear {
             background-color: darkorange;
         }
@@ -97,13 +112,13 @@
                 </div>
                 <div class="button-row">
                     <button class="button button-write">0</button>
-                    <button class="button button-write" disabled>.</button>
+                    <button class="button button-write">.</button>
                     <button class="button button-eval">=</button>
                 </div>
-                <div class="button-row"></div>
             </div>
         </div>
         <div class="operator-col">
+            <button> </button>
             <button class="button button-clear">cl</button>
             <button class="button button-op">/</button>
             <button class="button button-op">*</button>
@@ -120,30 +135,39 @@
     const clearButton = document.querySelector('.button-clear');
     const input = document.querySelector('input[name="input"]');
 
-    let firstNumber;
+    let firstNumber = "";
     let currentNumber = "";
     let operator;
     let continueFlag = false;
     let opFlag = false;
+    let floatFlag = false;
 
     writeButtons.forEach(button => button.addEventListener('click', () => {
-        if (opFlag){
+        if (opFlag) {
             currentNumber = "";
             continueFlag = true;
         }
-        const prevVal = currentNumber;
-        displayValue(prevVal + button.innerHTML)
-        currentNumber = input.value;
+        let prevVal = currentNumber;
+
+        if (button.innerHTML === ".") {
+            if (!prevVal.includes(".")) {
+                currentNumber = prevVal + button.innerHTML;
+                floatFlag = true;
+            }
+        } else
+            currentNumber = prevVal + button.innerHTML;
+        displayValue(currentNumber);
         opFlag = false;
     }));
 
     opButtons.forEach(button => button.addEventListener('click', () => {
-        if (continueFlag) 
+        if (continueFlag)
             currentNumber = operate(firstNumber, currentNumber, operator);
         operator = button.innerHTML;
         firstNumber = currentNumber;
         displayValue(currentNumber);
         opFlag = true;
+        floatFlag = false;
     }));
 
     clearButton.addEventListener('click', () => clear());
@@ -154,20 +178,30 @@
         currentNumber = result;
         continueFlag = false;
         opFlag = false;
+        floatFlag = false;
     });
 
     function clear() {
         firstNumber = "";
         currentNumber = "";
         continueFlag = false;
+        floatFlag = false;
         result = 0;
         displayValue("");
     }
 
     function operate(firstNumString, secondNumString, operator) {
 
-        const firstNum = parseInt(firstNumString);
-        const secondNum = parseInt(secondNumString);
+        let firstNum;
+        let secondNum;
+
+        if (floatFlag) {
+            firstNum = parseFloat(firstNumString)
+            secondNum = parseFloat(secondNumString);
+        } else {
+            firstNum = parseInt(firstNumString);
+            secondNum = parseInt(secondNumString);
+        }
         let result = 0;
 
         switch (operator) {
@@ -194,7 +228,7 @@
         input.value = value;
     }
 
-//TODO: add options for floats
+    //TODO: add return button to delete last value 
 </script>
 
 </html>
